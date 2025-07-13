@@ -52,3 +52,4 @@ tmp/
 # *.sqlite
 # *.sqlite3
 # *.db
+/src/generated/prisma
