@@ -17,27 +17,86 @@ datasource db {
 model User_d {
   id    String    @id @default(uuid())
   name  String
-  email String 
+  email String    @unique
+  password String
   createdAt DateTime @default(now())
-  preferences Json?
-  post Post[]
+  preferences UserPreference?
 
-  
+  results Result[]    
+  competitions Participant[]
 }
-model Post{
-  id    Int    @id @default(autoincrement())
-  rating Float
-  createdAt DateTime
-  updatedAt DateTime
-  author User_d  @relation(fields: [userId],references: [id])
+
+model UserPreference {
+  id    String    @id @default(uuid())
+  
+  
+  emailNotifications  Boolean  @default(false)
+  theme               String   @default("light")
+ 
+ 
+  userId String   @unique 
+  user   User_d   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Sentence{
+   id        String           @id @default(cuid())
+  text      String           @db.Text // Use @db.Text for potentially long strings
+  category  SentenceCategory 
+  wordCount Int              
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  results Result[]
+
+}
+model Result{
+  id String @id @default(cuid())
   userId String
-  categories Category[]
+  wpm       Int      // Words Per Minute
+  accuracy  Float    // Accuracy as a percentage (e.g., 98.5)
+  rawWpm    Int      // Speed before correcting for errors
+  errorCount Int      // Total number of incorrect characters
+  timeTaken Int      // Time in seconds to complete the test
+ 
+  createdAt DateTime @default(now())
+  competitionId String?
+    sentenceId String
+  competition Competition? @relation(fields: [competitionId],references: [id],onDelete:SetNull )
+  user  User_d @relation(fields: [userId], references: [id],onDelete: Cascade)
+ 
+  sentence   Sentence @relation(fields: [sentenceId], references: [id], onDelete: Cascade)
+ 
+}
 
-
+model Competition{
+  id        String   @id @default(cuid())
+  category  SentenceCategory 
+  startTime DateTime
+  endTime   DateTime
+  createdAt DateTime @default(now())
+  results   Result[]
+  user Participant[]
   
 }
+model Participant {
+ 
+  userId String
+  user   User_d @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-model Category {
-  id String @id @default(uuid())
-  posts Post[] 
+  
+  competitionId String
+  competition   Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  
+ 
+  joinedAt DateTime @default(now())
+  rank     Int?    
+
+  
+  @@id([userId, competitionId])
 }
+enum SentenceCategory {
+  FIFTEEN
+  TWENTY_FIVE
+  FIFTY
+}
+

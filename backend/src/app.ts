@@ -1,33 +1,27 @@
 import express, {Application} from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import {errorHandler} from "./middlewares/errorHandler";
-import {notFoundHandler} from "./middlewares/notFoundHandler";
 
+import authRoutes from "./routes/auth.routes";
+import sentenceRoutes from "./routes/sentence.routes";
+import preferenceRouter from "./routes/preference.routes";
+import {PrismaClient} from "./generated/prisma";
+export const prisma = new PrismaClient();
+//console.log(prisma.user_d);
 dotenv.config();
 
 const app: Application = express();
-
-// Middleware
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
-    credentials: true,
-  })
-);
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-
-// Basic route for testing
-app.get("/", (req, res) => {
-  res.json({message: "Welcome to the API"});
-});
-
-// Routes will be added here
-// app.use('/api/v1', routes);
-
-// Error handling middleware
-/* app.use(notFoundHandler);
-app.use(errorHandler); */
-
 export default app;
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// --- API Routes ---
+app.use("/api/auth", authRoutes);
+app.use("/api/sentences", sentenceRoutes);
+app.use("/api/preferences", preferenceRouter);
+// --- Start Server ---
+const PORT: number = Number(process.env.PORT || 5000);
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

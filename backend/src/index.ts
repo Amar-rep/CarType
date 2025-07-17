@@ -2,33 +2,14 @@
 import http from "http";
 import {Server as SocketIOServer, Socket} from "socket.io";
 import app from "./app"; // Your configured Express app from app.ts
-import {PrismaClient} from "./generated/prisma";
-const prisma = new PrismaClient();
+import {prisma} from "./app"; // Import Prisma client from index.ts
 
-// --- Game Logic Imports (You'll create these modules) ---
-// These are placeholders. Your actual game logic will be more complex.
-// import { handlePlayerJoin, handlePlayerProgress, handlePlayerDisconnect, GameState } from './game/gameManager';
-// interface PlayerProgressPayload { gameId: string; progress: number; wpm: number; }
-
-// --- Environment Configuration ---
-// dotenv.config() is already called in app.ts, so process.env is available
 const PORT = process.env.PORT || 3001;
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000"; // Important for Socket.IO CORS
 
 // --- Create HTTP Server ---
 const httpServer = http.createServer(app);
 
-async function main() {
-  const user = await prisma.user_d.findMany();
-  console.log(user);
-}
-main()
-  .catch((e) => {
-    console.log(e);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
 //---------------------------------------------------
 
 // --- Initialize Socket.IO Server ---
