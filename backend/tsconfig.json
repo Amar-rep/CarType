@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es6", // Or a more modern target like "es2020"
+    "module": "commonjs",
+    "rootDir": "./src",
+    "outDir": "./dist", // Compiled JavaScript will go here
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"], // Which files to include
+  "exclude": ["node_modules", "**/*.spec.ts"] // Which to exclude
+}

@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+
+# Transpiled TypeScript/JavaScript output
+# Common names are dist, build, out. Check your tsconfig.json "outDir" or build scripts.
+dist/
+build/
+out/
+lib/ # Another common name for compiled JS
+
+# Log files
+*.log
+logs/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+# Never commit your .env files containing secrets!
+.env
+.env.*
+!.env.example # It's good practice to commit an example .env file
+
+# Test coverage reports
+coverage/
+lcov-report/
+.nyc_output/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor specific files (optional here, could be in a root .gitignore)
+.idea/
+.vscode/ # Only if you don't want to share launch.json or tasks.json for the backend specifically
+*.swp
+*.swo
+
+# Temporary files or directories
+tmp/
+.tmp/
+
+# Optional: Uploaded files / User-generated content if stored locally during dev
+# uploads/
+# media/
+
+# Optional: Specific framework files
+# .serverless/
+# .terraform/
+
+# Optional: Database files (if using local SQLite for dev, etc.)
+# *.sqlite
+# *.sqlite3
+# *.db
+/src/generated/prisma
