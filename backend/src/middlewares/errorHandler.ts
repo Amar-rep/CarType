@@ -1,4 +1,4 @@
-import {Request, Response, NextFunction} from "express";
+import { Request, Response, NextFunction } from "express";
 
 export class AppError extends Error {
   statusCode: number;
@@ -28,8 +28,8 @@ export const errorHandler = (
     });
   }
 
-  // Programming or other unknown error: don't leak error details
-  console.error("ERROR 💥", err);
+
+  console.error("ERROR ", err);
   return res.status(500).json({
     status: "error",
     message: "Something went wrong!",

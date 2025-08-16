@@ -101,7 +101,7 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
       if (currentWordIndex != words.length - 1) setCurrentCharIndex(0);
     }
   };
-
+  // trying to check focus wohoo
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (inputRef.current && inputRef.current !== document.activeElement) {
@@ -132,7 +132,7 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
       );
       resetStates();
     }
-  }, [endTime, words, resetStates]);
+  }, [endTime, words]);
 
   return (
     <div

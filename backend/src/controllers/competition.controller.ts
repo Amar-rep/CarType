@@ -1,15 +1,15 @@
-import {Request, Response} from "express";
-import {prisma} from "../app";
-import {PrismaClientKnownRequestError} from "@prisma/client/runtime/library";
-// --- Competition Handlers ---
+import { Request, Response } from "express";
+import { prisma } from "../app";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+
 
 export const createCompetition = async (req: Request, res: Response) => {
-  const {category, startTime, endTime} = req.body;
+  const { category, startTime } = req.body;
 
-  if (!category || !startTime || !endTime) {
+  if (!category || !startTime) {
     res
       .status(400)
-      .json({message: "Category, startTime, and endTime are required"});
+      .json({ message: "Category, startTime, and endTime are required" });
     return;
   }
 
@@ -18,50 +18,50 @@ export const createCompetition = async (req: Request, res: Response) => {
       data: {
         category,
         startTime: new Date(startTime),
-        endTime: new Date(endTime),
+        endTime: new Date(),
       },
     });
     res.status(201).json(competition);
   } catch (error) {
     console.error("Failed to create competition:", error);
-    res.status(500).json({message: "Internal Server Error"});
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 export const getAllCompetitions = async (req: Request, res: Response) => {
   try {
     const competitions = await prisma.competition.findMany({
-      orderBy: {startTime: "desc"},
+      orderBy: { startTime: "desc" },
     });
     res.status(200).json(competitions);
   } catch (error) {
     console.error("Failed to get competitions:", error);
-    res.status(500).json({message: "Internal Server Error"});
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 export const getCompetitionById = async (req: Request, res: Response) => {
-  const {competitionId} = req.params;
+  const { competitionId } = req.params;
   try {
     const competition = await prisma.competition.findUnique({
-      where: {id: competitionId},
+      where: { id: competitionId },
       include: {
-        // Include participants and their user info (but not password!)
+
         user: {
-          // 'user' is the field name in your Competition model
+
           include: {
             user: {
-              // 'user' is the field name in your Participant model
-              select: {id: true, name: true},
+
+              select: { id: true, name: true },
             },
           },
         },
-        // Include results and the user who achieved them
+
         results: {
-          orderBy: {wpm: "desc"}, // Order results like a leaderboard
+          orderBy: { wpm: "desc" },
           include: {
             user: {
-              select: {id: true, name: true},
+              select: { id: true, name: true },
             },
           },
         },
@@ -69,13 +69,13 @@ export const getCompetitionById = async (req: Request, res: Response) => {
     });
 
     if (!competition) {
-      res.status(404).json({message: "Competition not found"});
+      res.status(404).json({ message: "Competition not found" });
       return;
     }
     res.status(200).json(competition);
   } catch (error) {
     console.error("Failed to get competition:", error);
-    res.status(500).json({message: "Internal Server Error"});
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -110,7 +110,7 @@ export const getCompetitionById = async (req: Request, res: Response) => {
     });
     res.status(201).json(participant);
   } catch (error) {
-    // P2002 is the Prisma error code for a unique constraint violation
+   
     if (
       error instanceof prisma.PrismaClientKnownRequestError &&
       error.code === "P2002"
@@ -137,7 +137,7 @@ export const leaveCompetition = async (req: Request, res: Response) => {
   try {
     await prisma.participant.delete({
       where: {
-        // Use the composite ID defined in the schema
+    
         userId_competitionId: {
           userId,
           competitionId,
@@ -146,7 +146,7 @@ export const leaveCompetition = async (req: Request, res: Response) => {
     });
     res.status(204).send(); // No Content
   } catch (error) {
-    // P2025 is the error code for when a record to delete is not found
+    
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2025"

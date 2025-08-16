@@ -1,9 +1,8 @@
-import {Clock, Type, Quote, Zap, Wrench} from "lucide-react";
+import { Clock, Type, Quote, Zap, Wrench } from "lucide-react";
 import React from "react";
 
 export const SettingsBar: React.FC = () => {
-  // In a real app, you'd use state to manage the active setting.
-  // For this UI clone, we'll just highlight "quote".
+
   const activeStyle = "text-yellow-400";
   const inactiveStyle = "text-zinc-500 hover:text-zinc-300";
 

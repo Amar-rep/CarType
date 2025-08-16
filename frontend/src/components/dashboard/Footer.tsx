@@ -1,8 +1,8 @@
 import React from "react";
-import {Mail, ShieldCheck, Twitter, Lock} from "lucide-react";
+import { Mail, ShieldCheck, Twitter, Lock } from "lucide-react";
 
-// A small component for the keyboard-style keys
-const KbdKey = ({children}: {children: React.ReactNode}) => (
+
+const KbdKey = ({ children }: { children: React.ReactNode }) => (
   <span className="bg-zinc-800 rounded px-2 py-1 text-zinc-300 font-mono text-xs">
     {children}
   </span>

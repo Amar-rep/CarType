@@ -34,3 +34,24 @@ export const getRandomSentence = async (req: Request, res: Response) => {
     res.status(500).json({message: "Server error", error});
   }
 };
+
+export const getRandomSentenceByCategory = async (
+  category: SentenceCategory
+) => {
+  try {
+    const sentences = await prisma.sentence.findMany({
+      where: {category},
+      take: 20,
+    });
+
+    if (sentences.length === 0) {
+      throw new Error("No sentences found for this category.");
+    }
+
+    const randomIndex = Math.floor(Math.random() * sentences.length);
+    return sentences[randomIndex];
+  } catch (error) {
+    console.error("Error fetching random sentence:", error);
+    throw error;
+  }
+};
